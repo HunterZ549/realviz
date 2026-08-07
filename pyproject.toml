@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "realviz"
+version = "0.1.0"
+description = "Real Analysis Visualization — mathematical visualizations for measure theory and real analysis, starting with Riemann vs Lebesgue integrals."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "HunterZ549" }]
+keywords = [
+    "mathematics",
+    "real-analysis",
+    "measure-theory",
+    "visualization",
+    "lebesgue-integral",
+    "riemann-integral",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = [
+    "matplotlib>=3.5.0",
+    "numpy>=1.20.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/HunterZ549/realviz"
+Repository = "https://github.com/HunterZ549/realviz"
+Issues = "https://github.com/HunterZ549/realviz/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-v", "--strict-markers", "--tb=short"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/realviz"]
