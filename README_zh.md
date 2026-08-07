@@ -16,7 +16,7 @@
 > 实变函数很抽象,直到你**亲眼看见**它。`realviz` 把两套积分理论画在同一个
 > 函数上——黎曼怎么切、勒贝格怎么切,一眼就懂。
 
-<img src="examples/output_compare_x2.png" width="820" alt="f(x)=x^2 上的黎曼与勒贝格积分对比">
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_compare_x2.png" width="820" alt="f(x)=x^2 上的黎曼与勒贝格积分对比">
 
 </div>
 
@@ -30,7 +30,7 @@
 
 | 黎曼:切 x 轴 | 勒贝格:切 y 轴 |
 |:---:|:---:|
-| <img src="examples/output_riemann_x2.png" width="380" alt="黎曼和:竖直分割"> | <img src="examples/output_lebesgue_x2.png" width="380" alt="勒贝格和:水平分割"> |
+| <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_riemann_x2.png" width="380" alt="黎曼和:竖直分割"> | <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_lebesgue_x2.png" width="380" alt="勒贝格和:水平分割"> |
 | 等宽的**竖直**细条 | 等高的**水平**切片 |
 | 求和:`Σ f(xᵢ) · Δx` | 求和:`Σ yₖ · m(Eₖ)` |
 | 颜色 = **x 位置** | 颜色 = **y 取值** |
@@ -45,14 +45,12 @@
 勒贝格测出无理数的测度是 `1`、有理数的测度是 `0`,干净利落地得到答案:
 **`∫D = 0`**。这一个函数,催生了一整个领域。
 
-<img src="examples/output_dirichlet.png" width="740" alt="Dirichlet 函数:黎曼失败,勒贝格成功">
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_dirichlet.png" width="740" alt="Dirichlet 函数:黎曼失败,勒贝格成功">
 
 ## 安装
 
 ```bash
-pip install realviz            # 发布到 PyPI 之后
-# 目前先这样:
-pip install -e .
+pip install realviz
 ```
 
 ## 快速上手

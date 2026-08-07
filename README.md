@@ -16,7 +16,7 @@
 > Real analysis is abstract until you **see** it. `realviz` draws the two great
 > theories of integration on the same function — so the difference finally clicks.
 
-<img src="examples/output_compare_x2.png" width="820" alt="Riemann vs Lebesgue on f(x)=x^2">
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_compare_x2.png" width="820" alt="Riemann vs Lebesgue on f(x)=x^2">
 
 </div>
 
@@ -31,7 +31,7 @@ the *measure* of its preimage: `Σ yₖ·m(Eₖ)`.
 
 | Riemann partitions the x-axis | Lebesgue partitions the y-axis |
 |:---:|:---:|
-| <img src="examples/output_riemann_x2.png" width="380" alt="Riemann sum: vertical strips"> | <img src="examples/output_lebesgue_x2.png" width="380" alt="Lebesgue sum: horizontal strips"> |
+| <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_riemann_x2.png" width="380" alt="Riemann sum: vertical strips"> | <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_lebesgue_x2.png" width="380" alt="Lebesgue sum: horizontal strips"> |
 | Same-width **vertical** strips | Same-height **horizontal** slices |
 | Sum: `Σ f(xᵢ) · Δx` | Sum: `Σ yₖ · m(Eₖ)` |
 | Strip color = **x-position** | Slice color = **y-value** |
@@ -47,14 +47,12 @@ always `0`, and the gap *never closes*. Riemann gives up.
 Lebesgue measures the irrationals (`1`) and the rationals (`0`), and gets a clean
 answer: **`∫D = 0`**. This single function motivated a whole field.
 
-<img src="examples/output_dirichlet.png" width="740" alt="Dirichlet function: Riemann fails, Lebesgue succeeds">
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_dirichlet.png" width="740" alt="Dirichlet function: Riemann fails, Lebesgue succeeds">
 
 ## Install
 
 ```bash
-pip install realviz            # once on PyPI
-# today:
-pip install -e .
+pip install realviz
 ```
 
 ## Quick start
