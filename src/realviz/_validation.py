@@ -14,6 +14,8 @@ from typing import Any, Callable
 _MAX_PARTITIONS = 10_000
 _MAX_SAMPLES = 1_000_000
 _MAX_DOMAIN = 1e12  # reasonable domain bound for real analysis
+_MAX_CANTOR_LEVELS = 10  # each level doubles the interval count: 2**n
+_MAX_FIGSIZE = 50  # inches per side; the render buffer scales as size * dpi
 
 
 def _check_callable(f: Any, name: str = "f") -> None:
@@ -57,6 +59,45 @@ def _check_samples(n: Any, name: str = "n_samples") -> None:
         raise ValueError(f"{name} must be positive, got {n}")
     if n > _MAX_SAMPLES:
         raise ValueError(f"{name} too large: {n}. Maximum is {_MAX_SAMPLES}.")
+
+
+def _check_cantor_levels(n: Any, name: str = "n_levels") -> None:
+    """Validate Cantor-set construction depth.
+
+    Depth is bounded because every level doubles the number of intervals
+    (``2**n``), so a generous cap keeps both drawing and validation cheap.
+    """
+    if not isinstance(n, int) or isinstance(n, bool):
+        raise TypeError(f"{name} must be an int, got {type(n).__name__!r}")
+    if n < 0:
+        raise ValueError(f"{name} must be non-negative, got {n}")
+    if n > _MAX_CANTOR_LEVELS:
+        raise ValueError(
+            f"{name} too large: {n}. Maximum is {_MAX_CANTOR_LEVELS} "
+            f"(that is 2**{_MAX_CANTOR_LEVELS} = {2 ** _MAX_CANTOR_LEVELS} intervals)."
+        )
+
+
+def _check_figsize(figsize: Any, name: str = "figsize") -> None:
+    """Validate a matplotlib figure size ``(width, height)`` tuple.
+
+    The render buffer is roughly ``figsize_inches * dpi`` pixels per side, so an
+    unbounded size can ask matplotlib to allocate gigabytes of memory.  Each
+    dimension is therefore capped like every other numeric parameter.
+    """
+    if not isinstance(figsize, tuple) or len(figsize) != 2:
+        raise TypeError(f"{name} must be a (width, height) tuple, got {figsize!r}")
+    w, h = figsize
+    if not isinstance(w, Number) or not isinstance(h, Number):
+        raise TypeError(f"{name} entries must be numbers, got {w!r} and {h!r}")
+    if not (math.isfinite(w) and math.isfinite(h)):
+        raise ValueError(f"{name} entries must be finite, got {figsize!r}")
+    if w <= 0 or h <= 0:
+        raise ValueError(f"{name} entries must be positive, got {figsize!r}")
+    if w > _MAX_FIGSIZE or h > _MAX_FIGSIZE:
+        raise ValueError(
+            f"{name} too large: {figsize}. Maximum per dimension is {_MAX_FIGSIZE} inches."
+        )
 
 
 def _validate_function(

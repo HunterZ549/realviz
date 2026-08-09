@@ -25,7 +25,13 @@ from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
 from matplotlib.figure import Figure
 
-from ._validation import _check_callable, _check_interval, _check_partitions, _check_samples
+from ._validation import (
+    _check_callable,
+    _check_figsize,
+    _check_interval,
+    _check_partitions,
+    _check_samples,
+)
 
 # -- style constants ------------------------------------------------
 _CMAP_RIEMANN = "coolwarm"    # colour by x-position
@@ -330,6 +336,7 @@ def compare_integrals(
     _check_callable(f)
     _check_interval(a, b)
     _check_partitions(n_partitions)
+    _check_figsize(figsize)
 
     fig, (ax_l, ax_r) = plt.subplots(1, 2, figsize=figsize)
 

@@ -12,7 +12,15 @@ Quick start
 Full documentation: https://github.com/HunterZ549/realviz
 """
 
+from .cantor import cantor_function, cantor_set
 from .integrals import compare_integrals, dirichlet_illustration, lebesgue_plot, riemann_plot
 
-__version__ = "0.1.0"
-__all__ = ["compare_integrals", "dirichlet_illustration", "lebesgue_plot", "riemann_plot"]
+__version__ = "0.2.0"
+__all__ = [
+    "cantor_function",
+    "cantor_set",
+    "compare_integrals",
+    "dirichlet_illustration",
+    "lebesgue_plot",
+    "riemann_plot",
+]

@@ -6,6 +6,7 @@ import pytest
 
 from realviz._validation import (
     _check_callable,
+    _check_figsize,
     _check_interval,
     _check_partitions,
     _check_samples,
@@ -105,6 +106,43 @@ class TestCheckSamples:
     def test_rejects_too_large(self):
         with pytest.raises(ValueError, match="too large"):
             _check_samples(2_000_000)
+
+
+# ── _check_figsize ───────────────────────────────────────────────
+class TestCheckFigsize:
+    def test_accepts_reasonable_size(self):
+        _check_figsize((13, 5.5))
+
+    def test_accepts_integers(self):
+        _check_figsize((8, 6))
+
+    def test_rejects_not_tuple(self):
+        with pytest.raises(TypeError, match="tuple"):
+            _check_figsize([8, 6])  # type: ignore[arg-type]
+
+    def test_rejects_wrong_length(self):
+        with pytest.raises(TypeError, match="tuple"):
+            _check_figsize((8,))  # type: ignore[arg-type]
+
+    def test_rejects_non_numeric_entries(self):
+        with pytest.raises(TypeError, match="numbers"):
+            _check_figsize(("8", 6))  # type: ignore[arg-type]
+
+    def test_rejects_infinite_entry(self):
+        with pytest.raises(ValueError, match="finite"):
+            _check_figsize((math.inf, 6))
+
+    def test_rejects_zero(self):
+        with pytest.raises(ValueError, match="positive"):
+            _check_figsize((0, 6))
+
+    def test_rejects_negative(self):
+        with pytest.raises(ValueError, match="positive"):
+            _check_figsize((8, -1))
+
+    def test_rejects_too_large(self):
+        with pytest.raises(ValueError, match="too large"):
+            _check_figsize((500, 6))
 
 
 # ── _validate_function ───────────────────────────────────────────

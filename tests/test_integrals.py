@@ -121,6 +121,10 @@ class TestCompareIntegrals:
         fig, _, _ = compare_integrals(lambda x: x, 0, 2, n_partitions=50)
         assert fig is not None
 
+    def test_rejects_huge_figsize(self):
+        with pytest.raises(ValueError, match="too large"):
+            compare_integrals(lambda x: x, 0, 1, figsize=(500, 6))
+
     def test_input_validation_propagates(self):
         with pytest.raises(TypeError):
             compare_integrals("not callable", 0, 1)  # type: ignore[arg-type]

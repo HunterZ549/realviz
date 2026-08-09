@@ -11,7 +11,7 @@
 [![CI](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml/badge.svg)](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-53%20passing-brightgreen.svg)](tests)
+[![Tests](https://img.shields.io/badge/tests-86%20passing-brightgreen.svg)](tests)
 
 > Real analysis is abstract until you **see** it. `realviz` draws the two great
 > theories of integration on the same function — so the difference finally clicks.
@@ -49,6 +49,21 @@ answer: **`∫D = 0`**. This single function motivated a whole field.
 
 <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_dirichlet.png" width="740" alt="Dirichlet function: Riemann fails, Lebesgue succeeds">
 
+## Measure zero, yet uncountable: the Cantor set
+
+Remove the middle third of `[0, 1]`, then the middle third of every piece that
+remains, forever. Row `k` shows what is left after `k` removals; the right
+panel tracks the surviving measure. `m(E_k) = (2/3)^k` collapses to 0
+exponentially — yet the limiting set has as many points as the real line.
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_cantor.png" width="820" alt="Cantor set construction and measure decay">
+
+The Cantor *function* is the staircase this process grows into: continuous,
+non-decreasing, flat almost everywhere (`F' = 0` a.e.), yet it climbs from 0
+to 1 — the counterexample that kills the naive fundamental theorem of calculus.
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_cantor_function.png" width="740" alt="Cantor function — the devil's staircase">
+
 ## Install
 
 ```bash
@@ -70,6 +85,11 @@ lebesgue_plot(lambda x: x**2, 0, 1, n_partitions=10)
 # The Dirichlet function — where Riemann fails, Lebesgue succeeds
 from realviz import dirichlet_illustration
 dirichlet_illustration()
+
+# The Cantor set and the devil's staircase
+from realviz import cantor_set, cantor_function
+cantor_set(n_levels=4)     # construction + measure decay
+cantor_function()          # F' = 0 a.e., yet F(1) - F(0) = 1
 ```
 
 ### Try it yourself
@@ -77,6 +97,7 @@ dirichlet_illustration()
 ```bash
 python examples/demo_compare.py     # x² and sin(x), side by side
 python examples/demo_dirichlet.py   # the Dirichlet illustration
+python examples/demo_cantor.py      # Cantor set + devil's staircase
 ```
 
 ## Design principles
@@ -85,12 +106,12 @@ python examples/demo_dirichlet.py   # the Dirichlet illustration
   partition counts are bounded, no `eval`/`exec`/`pickle`, no network, no file I/O.
 - **Pedagogical color** — every strip is colored by *what is being partitioned*,
   so the axis-choice is visible at a glance.
-- **Zero magic** — pure NumPy + Matplotlib, ~300 lines of core code, MIT licensed.
+- **Zero magic** — pure NumPy + Matplotlib, ~800 lines of core code, MIT licensed.
 
 ## Roadmap
 
 - [x] `v0.1.0` — Riemann vs Lebesgue integral comparison + Dirichlet illustration
-- [ ] `v0.2.0` — Cantor set construction, step by step
+- [x] `v0.2.0` — Cantor set construction + Cantor function (devil's staircase)
 - [ ] `v0.3.0` — Simple-function approximation of measurable functions
 - [ ] `v0.4.0` — Convergence modes (pointwise, uniform, a.e., in L¹)
 - [ ] `v0.5.0` — Vitali set and non-measurable sets (conceptual)
@@ -101,7 +122,7 @@ python examples/demo_dirichlet.py   # the Dirichlet illustration
 git clone https://github.com/HunterZ549/realviz.git
 cd realviz
 pip install -e ".[dev]"
-pytest               # 53 tests, CI runs Python 3.9–3.12
+pytest               # 86 tests, CI runs Python 3.9–3.12
 ```
 
 ## License
