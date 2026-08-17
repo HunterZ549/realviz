@@ -279,8 +279,12 @@ def simple_approximation(
     ypad = (y_max - y_min) * 0.05 if not is_constant else max(1.0, abs(y_min)) * 0.05
     ax_l.set_ylim(y_min - ypad, y_max + ypad)
     ax_l.axhline(y=0, color="grey", linewidth=0.5, zorder=1)
-    ax_l.legend(loc="upper left", fontsize=9, framealpha=0.92,
-                edgecolor="#cccccc")
+    # Legend outside the plot, just above the colorbar, so it never overlaps
+    # the curve (the colorbar's top edge is ~0.93 of the axes height).  The
+    # vertical (ncol=1) layout keeps it narrow enough to sit fully in the
+    # margin above the colorbar, clear of both the plot and the panel title.
+    ax_l.legend(loc="lower center", bbox_to_anchor=(1.045, 0.94), ncol=1,
+                fontsize=9, framealpha=0.92, edgecolor="#cccccc")
 
     # -- TOP RIGHT: ∫s_k rises to ∫f ---------------------------------
     ax_rt.plot(ks, integrals, marker="o", color=_COLOR_INTEGRAL,
@@ -288,8 +292,18 @@ def simple_approximation(
     ax_rt.axhline(ref_integral, color=_COLOR_REF, linestyle="--",
                   linewidth=1.4, zorder=2, label=r"$\int f$ (high-res)")
     for k, v in zip(ks, integrals):
-        ax_rt.text(float(k), float(v), f"{v:.3f}", ha="center", va="bottom",
-                   fontsize=6.5)
+        # The last label sits BELOW its point so the reference line just
+        # above it never tangles the text.
+        ax_rt.text(float(k), float(v), f"{v:.3f}", ha="center",
+                   va="top" if float(k) == ks[-1] else "bottom", fontsize=6.5)
+    # Spell out the reference value, sitting ON the line at its left end —
+    # the last data point and the line are close, so the line needs its own
+    # label to be read unambiguously (both x² and a jump land at ~88% of
+    # the panel height, which is easy to misjudge by eye alone).
+    ref_display = 0.0 if abs(ref_integral) < 1e-9 else ref_integral
+    ax_rt.text(ks[0], ref_integral, rf"$\int f \approx {ref_display:.3f}$",
+               ha="left", va="bottom", fontsize=9, color=_COLOR_REF,
+               clip_on=False)
     lo = min(0.0, float(np.min(integrals)), ref_integral)
     hi = max(float(np.max(integrals)), ref_integral)
     pad = (hi - lo) * 0.16 if hi > lo else 1.0
