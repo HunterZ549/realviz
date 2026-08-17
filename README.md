@@ -11,7 +11,7 @@
 [![CI](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml/badge.svg)](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-86%20passing-brightgreen.svg)](tests)
+[![Tests](https://img.shields.io/badge/tests-120%20passing-brightgreen.svg)](tests)
 
 > Real analysis is abstract until you **see** it. `realviz` draws the two great
 > theories of integration on the same function — so the difference finally clicks.
@@ -64,6 +64,29 @@ to 1 — the counterexample that kills the naive fundamental theorem of calculus
 
 <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_cantor_function.png" width="740" alt="Cantor function — the devil's staircase">
 
+## Every measurable function is a limit of simple functions
+
+A *simple function* takes finitely many values, each constant on a measurable
+set. The classic construction cuts the **range** of `f` into `2^n` equal
+horizontal bands and snaps every point down to the lower edge of its band:
+`sₙ ≤ f`, and `sₙ` climbs to `f` as `n` grows. This is the Lebesgue picture
+finished — the integral is *defined* as the limit `∫f = lim ∫sₙ`.
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_simple_approx_x2.png" width="820" alt="Simple-function approximation: s_n converges to f from below">
+
+Left: `f` with `sₙ` staircased beneath it — each band is a level set
+`E_k = {x : c_k ≤ f(x) < c_{k+1}}`. Top right: `∫s_k` rises monotonically to
+`∫f`. Bottom right: the uniform error `‖f − s_k‖∞ → 0` on a log scale.
+Simple functions don't care about discontinuities, so oscillations and jumps
+are handled just as naturally:
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_simple_approx_sin.png" width="820" alt="Oscillating case: sin(3x) and its simple-function approximation">
+
+A jump discontinuity changes nothing — the level sets stay measurable, so
+`∫s_n` still converges to the true `∫f = 3/4`:
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_simple_approx_jump.png" width="820" alt="Discontinuous case: a jump function and its simple-function approximation">
+
 ## Install
 
 ```bash
@@ -90,6 +113,10 @@ dirichlet_illustration()
 from realviz import cantor_set, cantor_function
 cantor_set(n_levels=4)     # construction + measure decay
 cantor_function()          # F' = 0 a.e., yet F(1) - F(0) = 1
+
+# Simple-function approximation — the Lebesgue story, finished
+from realviz import simple_approximation
+simple_approximation(lambda x: x**2, 0, 1, n_levels=5)   # s_n -> f, ∫s_n -> ∫f
 ```
 
 ### Try it yourself
@@ -98,6 +125,7 @@ cantor_function()          # F' = 0 a.e., yet F(1) - F(0) = 1
 python examples/demo_compare.py     # x² and sin(x), side by side
 python examples/demo_dirichlet.py   # the Dirichlet illustration
 python examples/demo_cantor.py      # Cantor set + devil's staircase
+python examples/demo_simple_approx.py  # simple functions: s_n -> f
 ```
 
 ## Design principles
@@ -112,7 +140,7 @@ python examples/demo_cantor.py      # Cantor set + devil's staircase
 
 - [x] `v0.1.0` — Riemann vs Lebesgue integral comparison + Dirichlet illustration
 - [x] `v0.2.0` — Cantor set construction + Cantor function (devil's staircase)
-- [ ] `v0.3.0` — Simple-function approximation of measurable functions
+- [x] `v0.3.0` — Simple-function approximation of measurable functions
 - [ ] `v0.4.0` — Convergence modes (pointwise, uniform, a.e., in L¹)
 - [ ] `v0.5.0` — Vitali set and non-measurable sets (conceptual)
 
@@ -122,7 +150,7 @@ python examples/demo_cantor.py      # Cantor set + devil's staircase
 git clone https://github.com/HunterZ549/realviz.git
 cd realviz
 pip install -e ".[dev]"
-pytest               # 86 tests, CI runs Python 3.9–3.12
+pytest               # 120 tests, CI runs Python 3.9–3.12
 ```
 
 ## License

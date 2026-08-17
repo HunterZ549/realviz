@@ -15,6 +15,7 @@ _MAX_PARTITIONS = 10_000
 _MAX_SAMPLES = 1_000_000
 _MAX_DOMAIN = 1e12  # reasonable domain bound for real analysis
 _MAX_CANTOR_LEVELS = 10  # each level doubles the interval count: 2**n
+_MAX_APPROX_LEVELS = 10  # each level doubles the band count: 2**n
 _MAX_FIGSIZE = 50  # inches per side; the render buffer scales as size * dpi
 
 
@@ -75,6 +76,24 @@ def _check_cantor_levels(n: Any, name: str = "n_levels") -> None:
         raise ValueError(
             f"{name} too large: {n}. Maximum is {_MAX_CANTOR_LEVELS} "
             f"(that is 2**{_MAX_CANTOR_LEVELS} = {2 ** _MAX_CANTOR_LEVELS} intervals)."
+        )
+
+
+def _check_approx_levels(n: Any, name: str = "n_levels") -> None:
+    """Validate simple-function approximation depth.
+
+    The value range is cut into ``2**n`` equal bands, so depth is bounded
+    exactly like the Cantor construction (drawing and validation both scale
+    with ``2**n``).
+    """
+    if not isinstance(n, int) or isinstance(n, bool):
+        raise TypeError(f"{name} must be an int, got {type(n).__name__!r}")
+    if n < 0:
+        raise ValueError(f"{name} must be non-negative, got {n}")
+    if n > _MAX_APPROX_LEVELS:
+        raise ValueError(
+            f"{name} too large: {n}. Maximum is {_MAX_APPROX_LEVELS} "
+            f"(that is 2**{_MAX_APPROX_LEVELS} = {2 ** _MAX_APPROX_LEVELS} bands)."
         )
 
 

@@ -5,6 +5,7 @@ import math
 import pytest
 
 from realviz._validation import (
+    _check_approx_levels,
     _check_callable,
     _check_figsize,
     _check_interval,
@@ -106,6 +107,28 @@ class TestCheckSamples:
     def test_rejects_too_large(self):
         with pytest.raises(ValueError, match="too large"):
             _check_samples(2_000_000)
+
+
+# ── _check_approx_levels ─────────────────────────────────────────
+class TestCheckApproxLevels:
+    def test_accepts_zero(self):
+        _check_approx_levels(0)
+
+    def test_rejects_non_int(self):
+        with pytest.raises(TypeError, match="int"):
+            _check_approx_levels(2.5)  # type: ignore[arg-type]
+
+    def test_rejects_bool(self):
+        with pytest.raises(TypeError, match="int"):
+            _check_approx_levels(True)  # type: ignore[arg-type]
+
+    def test_rejects_negative(self):
+        with pytest.raises(ValueError, match="non-negative"):
+            _check_approx_levels(-1)
+
+    def test_rejects_too_large(self):
+        with pytest.raises(ValueError, match="too large"):
+            _check_approx_levels(11)
 
 
 # ── _check_figsize ───────────────────────────────────────────────

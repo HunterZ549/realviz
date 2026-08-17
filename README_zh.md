@@ -11,7 +11,7 @@
 [![CI](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml/badge.svg)](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-86%20passing-brightgreen.svg)](tests)
+[![Tests](https://img.shields.io/badge/tests-120%20passing-brightgreen.svg)](tests)
 
 > 实变函数很抽象,直到你**亲眼看见**它。`realviz` 把两套积分理论画在同一个
 > 函数上——黎曼怎么切、勒贝格怎么切,一眼就懂。
@@ -60,6 +60,26 @@
 
 <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_cantor_function.png" width="740" alt="康托函数——魔鬼阶梯">
 
+## 每个可测函数都是简单函数的极限
+
+**简单函数**只取有限多个值——在每个可测集合上取常数。经典构造把 `f` 的
+**值域**切成 `2^n` 条等高水平带,把每个点按到所在色带的下边:`sₙ ≤ f`,
+且随 `n` 增大 `sₙ` 单调逼近 `f`。这是勒贝格图景的收官:积分就是这样
+**定义**的——`∫f = lim ∫sₙ`。
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_simple_approx_x2.png" width="820" alt="简单函数逼近:s_n 从下方收敛到 f">
+
+左栏是 `f` 与下方的 `sₙ` 阶梯,每条色带就是一个水平集
+`E_k = {x : c_k ≤ f(x) < c_{k+1}}`;右上栏 `∫s_k` 单调上升到 `∫f`;
+右下栏一致误差 `‖f − s_k‖∞ → 0`(对数轴)。简单函数同样不在乎间断——
+振荡和跳跃都能自然处理:
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_simple_approx_sin.png" width="820" alt="振荡情形:sin(3x) 与其简单函数逼近">
+
+跳跃间断也一样——水平集照样可测,`∫s_n` 依然收敛到真实的 `∫f = 3/4`:
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_simple_approx_jump.png" width="820" alt="间断情形:跳跃函数与其简单函数逼近">
+
 ## 安装
 
 ```bash
@@ -86,6 +106,10 @@ dirichlet_illustration()
 from realviz import cantor_set, cantor_function
 cantor_set(n_levels=4)     # 构造过程 + 度量衰减
 cantor_function()          # F' = 0 a.e.,却 F(1) - F(0) = 1
+
+# 简单函数逼近——勒贝格图景收官
+from realviz import simple_approximation
+simple_approximation(lambda x: x**2, 0, 1, n_levels=5)   # s_n -> f,∫s_n -> ∫f
 ```
 
 ### 亲自跑一跑
@@ -94,6 +118,7 @@ cantor_function()          # F' = 0 a.e.,却 F(1) - F(0) = 1
 python examples/demo_compare.py     # x² 和 sin(x),并排对比
 python examples/demo_dirichlet.py   # Dirichlet 函数图解
 python examples/demo_cantor.py      # 康托集 + 魔鬼阶梯
+python examples/demo_simple_approx.py  # 简单函数逼近:s_n -> f
 ```
 
 ## 设计原则
@@ -107,7 +132,7 @@ python examples/demo_cantor.py      # 康托集 + 魔鬼阶梯
 
 - [x] `v0.1.0` — 黎曼 vs 勒贝格积分对比 + Dirichlet 图解
 - [x] `v0.2.0` — 康托集构造 + 康托函数(魔鬼阶梯)
-- [ ] `v0.3.0` — 可测函数的简单函数逼近
+- [x] `v0.3.0` — 可测函数的简单函数逼近
 - [ ] `v0.4.0` — 收敛模式(逐点、一致、几乎处处、L¹)
 - [ ] `v0.5.0` — Vitali 集与不可测集(概念图解)
 
@@ -117,7 +142,7 @@ python examples/demo_cantor.py      # 康托集 + 魔鬼阶梯
 git clone https://github.com/HunterZ549/realviz.git
 cd realviz
 pip install -e ".[dev]"
-pytest               # 86 个测试,CI 跑 Python 3.9–3.12
+pytest               # 120 个测试,CI 跑 Python 3.9–3.12
 ```
 
 ## 协议
