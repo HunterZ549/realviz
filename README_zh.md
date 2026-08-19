@@ -11,7 +11,7 @@
 [![CI](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml/badge.svg)](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-179%20passing-brightgreen.svg)](tests)
+[![Tests](https://img.shields.io/badge/tests-230%20passing-brightgreen.svg)](tests)
 
 > 实变函数很抽象,直到你**亲眼看见**它。`realviz` 把两套积分理论画在同一个
 > 函数上——黎曼怎么切、勒贝格怎么切,一眼就懂。
@@ -105,6 +105,25 @@
 逐点与几乎处处用的是同一个诚实的"有限窗口"检验——量"最近几个成员仍在分歧"
 的集合——这恰恰是区分瘦峰与打字机的关键。
 
+## 测度在这里崩掉:Vitali 集
+
+测度论最锋利的东西,是一个**任何测度都量不出大小**的集合。把实数轴按有理数陪集
+`x + ℚ` 划分——`x ~ y ⟺ x − y ∈ ℚ` 是等价关系,每个陪集都可数且稠密。`V` 是一组
+**横截**:用选择公理,从每个陪集里恰好挑一个点。
+
+把 `V` 沿每个有理数 `r ∈ ℚ ∩ [0,1)` 平移。这无穷多个副本 `V + r` 恰好铺满圆周
+`[0,1)`,所以可数可加性要求 `1 = m([0,1)) = Σ m(V + r)`;而平移不变性又迫使每一项
+都等于同一个数 `m(V) = δ`。于是 `1 = Σ_ℵ₀ δ`——不可能:若 `δ = 0` 和为 `0`,若
+`δ > 0` 和为无穷大。没有任何 `δ` 能凑出 `1`,所以 **`V` 不是勒贝格可测的**。
+(诚实起见,以下只陈述不推导:内测度 `m_*(V) = 0`,外测度 `m^*(V) > 0`——它甚至
+可以选得任意小,并不等于 `1`。)
+
+这张图是一串四格证明:陪集是稠密的云(每个窗口都撞上每个陪集);选择公理每类取一点
+拼成 `V`;平移副本两两不相交地铺满圆周——数值验证过,96 个点 mod 1 两两不同——
+最后测度陷阱合拢。
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_vitali.png" width="820" alt="Vitali 集:无法被测度的有理数横截">
+
 ## 安装
 
 ```bash
@@ -141,6 +160,10 @@ from realviz import convergence_modes, FAMILIES
 convergence_modes("x_pow_n")     # ✓ 逐点 & 几乎处处,✗ 一致
 convergence_modes("thin_spike")  # ✓ 几乎处处,✗ L¹
 convergence_modes("typewriter")  # ✓ L¹,每一点都不收敛
+
+# Vitali 集——为什么有理数的横截没有测度
+from realviz import vitali_illustration
+vitali_illustration()
 ```
 
 ### 亲自跑一跑
@@ -151,6 +174,7 @@ python examples/demo_dirichlet.py   # Dirichlet 函数图解
 python examples/demo_cantor.py      # 康托集 + 魔鬼阶梯
 python examples/demo_simple_approx.py  # 简单函数逼近:s_n -> f
 python examples/demo_convergence.py    # 三个经典反例,2x2 网格
+python examples/demo_vitali.py         # Vitali 集——四格证明
 ```
 
 ## 设计原则
@@ -158,7 +182,7 @@ python examples/demo_convergence.py    # 三个经典反例,2x2 网格
 - **安全优先** — 严格输入校验:采样防异常、分割数有上限、不用 `eval`/`exec`/`pickle`、
   无网络、无文件读写。
 - **教学用配色** — 每条细条的颜色都反映"切的是哪根轴",分割方式一眼可见。
-- **零魔法** — 纯 NumPy + Matplotlib,核心代码约 1800 行,MIT 协议。
+- **零魔法** — 纯 NumPy + Matplotlib,核心代码约 2400 行,MIT 协议。
 
 ## 路线图
 
@@ -166,7 +190,7 @@ python examples/demo_convergence.py    # 三个经典反例,2x2 网格
 - [x] `v0.2.0` — 康托集构造 + 康托函数(魔鬼阶梯)
 - [x] `v0.3.0` — 可测函数的简单函数逼近
 - [x] `v0.4.0` — 收敛模式(逐点、一致、几乎处处、L¹)
-- [ ] `v0.5.0` — Vitali 集与不可测集(概念图解)
+- [x] `v0.5.0` — Vitali 集与不可测集(概念图解)
 
 ## 开发
 
@@ -174,7 +198,7 @@ python examples/demo_convergence.py    # 三个经典反例,2x2 网格
 git clone https://github.com/HunterZ549/realviz.git
 cd realviz
 pip install -e ".[dev]"
-pytest               # 179 个测试,CI 跑 Python 3.9–3.12
+pytest               # 230 个测试,CI 跑 Python 3.9–3.12
 ```
 
 ## 协议

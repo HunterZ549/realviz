@@ -16,8 +16,9 @@ from .cantor import cantor_function, cantor_set
 from .convergence import FAMILIES, convergence_modes
 from .integrals import compare_integrals, dirichlet_illustration, lebesgue_plot, riemann_plot
 from .simple_functions import simple_approximation
+from .vitali import vitali_illustration
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 __all__ = [
     "FAMILIES",
     "cantor_function",
@@ -28,4 +29,5 @@ __all__ = [
     "lebesgue_plot",
     "riemann_plot",
     "simple_approximation",
+    "vitali_illustration",
 ]

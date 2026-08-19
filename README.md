@@ -11,7 +11,7 @@
 [![CI](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml/badge.svg)](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-179%20passing-brightgreen.svg)](tests)
+[![Tests](https://img.shields.io/badge/tests-230%20passing-brightgreen.svg)](tests)
 
 > Real analysis is abstract until you **see** it. `realviz` draws the two great
 > theories of integration on the same function — so the difference finally clicks.
@@ -118,6 +118,29 @@ verdicts are plain NumPy. Pointwise and a.e. use the same honest finite-window
 test — the measure of the set where the last few members still disagree — which
 is exactly what separates the spike from the typewriter.
 
+## Measure breaks down: the Vitali set
+
+Measure theory's sharpest object is a set that **no measure can assign a size
+to**. Partition the real line into rational cosets `x + ℚ` — equivalence
+classes under `x ~ y ⟺ x − y ∈ ℚ`, each countable and dense. `V` is a
+**transversal**: the Axiom of Choice picks one point out of every class.
+
+Shift `V` by each rational `r ∈ ℚ ∩ [0,1)`. These countably many copies
+`V + r` partition the circle `[0,1)`, so countable additivity demands
+`1 = m([0,1)) = Σ m(V + r)`, while translation invariance forces every term to
+be the *same* number `m(V) = δ`. Hence `1 = Σ_ℵ₀ δ` — impossible: the sum is
+`0` if `δ = 0`, and infinite if `δ > 0`. No value of `δ` works, so **`V` is not
+Lebesgue measurable**. (Honest, stated not derived: the inner measure is
+`m_*(V) = 0` and the outer measure satisfies `m^*(V) > 0` — it can even be
+chosen arbitrarily small, not `1`.)
+
+The figure reads as a four-panel proof chain: classes are dense clouds (every
+window meets every class), Choice assembles `V` one point per class, the
+translates tile the circle disjointly — verified numerically, 96 points pairwise
+distinct mod 1 — and the measure trap snaps shut.
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_vitali.png" width="820" alt="The Vitali set: a transversal of Q that cannot be measured">
+
 ## Install
 
 ```bash
@@ -154,6 +177,10 @@ from realviz import convergence_modes, FAMILIES
 convergence_modes("x_pow_n")     # ✓ pointwise & a.e., ✗ uniform
 convergence_modes("thin_spike")  # ✓ a.e., ✗ L1
 convergence_modes("typewriter")  # ✓ L1, fails at every point
+
+# The Vitali set — why a transversal of Q has no measure
+from realviz import vitali_illustration
+vitali_illustration()
 ```
 
 ### Try it yourself
@@ -164,6 +191,7 @@ python examples/demo_dirichlet.py   # the Dirichlet illustration
 python examples/demo_cantor.py      # Cantor set + devil's staircase
 python examples/demo_simple_approx.py  # simple functions: s_n -> f
 python examples/demo_convergence.py    # the three counterexamples, 2x2 grids
+python examples/demo_vitali.py         # the Vitali set — a 4-panel proof
 ```
 
 ## Design principles
@@ -172,7 +200,7 @@ python examples/demo_convergence.py    # the three counterexamples, 2x2 grids
   partition counts are bounded, no `eval`/`exec`/`pickle`, no network, no file I/O.
 - **Pedagogical color** — every strip is colored by *what is being partitioned*,
   so the axis-choice is visible at a glance.
-- **Zero magic** — pure NumPy + Matplotlib, ~1,800 lines of core code, MIT licensed.
+- **Zero magic** — pure NumPy + Matplotlib, ~2,400 lines of core code, MIT licensed.
 
 ## Roadmap
 
@@ -180,7 +208,7 @@ python examples/demo_convergence.py    # the three counterexamples, 2x2 grids
 - [x] `v0.2.0` — Cantor set construction + Cantor function (devil's staircase)
 - [x] `v0.3.0` — Simple-function approximation of measurable functions
 - [x] `v0.4.0` — Convergence modes (pointwise, uniform, a.e., in L¹)
-- [ ] `v0.5.0` — Vitali set and non-measurable sets (conceptual)
+- [x] `v0.5.0` — Vitali set and non-measurable sets (conceptual)
 
 ## Development
 
@@ -188,7 +216,7 @@ python examples/demo_convergence.py    # the three counterexamples, 2x2 grids
 git clone https://github.com/HunterZ549/realviz.git
 cd realviz
 pip install -e ".[dev]"
-pytest               # 179 tests, CI runs Python 3.9–3.12
+pytest               # 230 tests, CI runs Python 3.9–3.12
 ```
 
 ## License

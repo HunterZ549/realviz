@@ -18,6 +18,9 @@ _MAX_CANTOR_LEVELS = 10  # each level doubles the interval count: 2**n
 _MAX_APPROX_LEVELS = 10  # each level doubles the band count: 2**n
 _MAX_CONV_N = 60  # function-family depth; drawing scales linearly with n_max
 _MAX_FIGSIZE = 50  # inches per side; the render buffer scales as size * dpi
+_MAX_VITALI_ROWS = 12  # classes drawn in the Vitali choice panel (one row each)
+_MAX_VITALI_REPS = 30  # chosen representatives sampled in the tiling panel
+_MAX_VITALI_SHIFTS = 30  # rational translates drawn in the tiling panel
 
 
 def _check_callable(f: Any, name: str = "f") -> None:
@@ -96,6 +99,26 @@ def _check_approx_levels(n: Any, name: str = "n_levels") -> None:
             f"{name} too large: {n}. Maximum is {_MAX_APPROX_LEVELS} "
             f"(that is 2**{_MAX_APPROX_LEVELS} = {2 ** _MAX_APPROX_LEVELS} bands)."
         )
+
+
+def _check_vitali_counts(n_rows_choice: Any, n_reps: Any, n_shifts: Any) -> None:
+    """Validate the schematic density of the Vitali illustration.
+
+    ``n_rows_choice`` classes are drawn as rows in the choice panel,
+    ``n_reps`` representatives are sampled in the tiling panel and
+    ``n_shifts`` rational translates tile the circle; the dot budget per
+    panel is bounded by the product, so the caps keep the schematic
+    readable and cheap.
+    """
+    for n, name, cap in ((n_rows_choice, "n_rows_choice", _MAX_VITALI_ROWS),
+                         (n_reps, "n_reps", _MAX_VITALI_REPS),
+                         (n_shifts, "n_shifts", _MAX_VITALI_SHIFTS)):
+        if not isinstance(n, int) or isinstance(n, bool):
+            raise TypeError(f"{name} must be an int, got {type(n).__name__!r}")
+        if n < 1:
+            raise ValueError(f"{name} must be positive, got {n}")
+        if n > cap:
+            raise ValueError(f"{name} too large: {n}. Maximum is {cap}.")
 
 
 def _check_n_max(n: Any, name: str = "n_max") -> None:
