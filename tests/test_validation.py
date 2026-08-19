@@ -7,8 +7,10 @@ import pytest
 from realviz._validation import (
     _check_approx_levels,
     _check_callable,
+    _check_epsilon,
     _check_figsize,
     _check_interval,
+    _check_n_max,
     _check_partitions,
     _check_samples,
     _validate_function,
@@ -129,6 +131,54 @@ class TestCheckApproxLevels:
     def test_rejects_too_large(self):
         with pytest.raises(ValueError, match="too large"):
             _check_approx_levels(11)
+
+
+# ── _check_n_max ─────────────────────────────────────────────────
+class TestCheckNMax:
+    def test_accepts_one(self):
+        _check_n_max(1)
+
+    def test_rejects_zero(self):
+        with pytest.raises(ValueError, match="positive"):
+            _check_n_max(0)
+
+    def test_rejects_negative(self):
+        with pytest.raises(ValueError, match="positive"):
+            _check_n_max(-3)
+
+    def test_rejects_float(self):
+        with pytest.raises(TypeError, match="int"):
+            _check_n_max(8.0)  # type: ignore[arg-type]
+
+    def test_rejects_bool(self):
+        with pytest.raises(TypeError, match="int"):
+            _check_n_max(True)  # type: ignore[arg-type]
+
+    def test_rejects_too_large(self):
+        with pytest.raises(ValueError, match="too large"):
+            _check_n_max(61)
+
+
+# ── _check_epsilon ───────────────────────────────────────────────
+class TestCheckEpsilon:
+    def test_accepts_midpoint(self):
+        _check_epsilon(0.08)
+
+    def test_rejects_zero(self):
+        with pytest.raises(ValueError, match="between 0 and 1"):
+            _check_epsilon(0.0)
+
+    def test_rejects_negative(self):
+        with pytest.raises(ValueError, match="between 0 and 1"):
+            _check_epsilon(-0.5)
+
+    def test_rejects_one(self):
+        with pytest.raises(ValueError, match="between 0 and 1"):
+            _check_epsilon(1.0)
+
+    def test_rejects_string(self):
+        with pytest.raises(TypeError, match="number"):
+            _check_epsilon("0.08")  # type: ignore[arg-type]
 
 
 # ── _check_figsize ───────────────────────────────────────────────

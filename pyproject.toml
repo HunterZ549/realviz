@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "realviz"
-version = "0.3.0"
-description = "Real Analysis Visualization — measure theory for the eyes: Riemann vs Lebesgue integrals, the Dirichlet function, the Cantor set & function, and simple-function approximation."
+version = "0.4.0"
+description = "Real Analysis Visualization — measure theory for the eyes: Riemann vs Lebesgue integrals, the Dirichlet function, the Cantor set & function, simple-function approximation, and convergence modes (pointwise / uniform / a.e. / L1)."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.9"

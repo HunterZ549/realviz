@@ -11,7 +11,7 @@
 [![CI](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml/badge.svg)](https://github.com/HunterZ549/realviz/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-120%20passing-brightgreen.svg)](tests)
+[![Tests](https://img.shields.io/badge/tests-179%20passing-brightgreen.svg)](tests)
 
 > Real analysis is abstract until you **see** it. `realviz` draws the two great
 > theories of integration on the same function — so the difference finally clicks.
@@ -87,6 +87,37 @@ A jump discontinuity changes nothing — the level sets stay measurable, so
 
 <img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_simple_approx_jump.png" width="820" alt="Discontinuous case: a jump function and its simple-function approximation">
 
+## Four ways to converge: one family, four cameras
+
+A sequence of functions can converge in genuinely different senses, and the
+textbook separates them with three counterexamples. `convergence_modes` draws
+each family **once** and judges it under four cameras at the same time —
+pointwise, uniform, almost-everywhere and L¹ — so the hierarchy breaks apart
+in front of you.
+
+The `x^n` family on `[0, 1]` converges pointwise and almost everywhere (only
+`x = 1` is exceptional) and in L¹ — but **not** uniformly: the `ε`-tube around
+the limit never closes near `x = 1`.
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_convergence_x_pow_n.png" width="820" alt="x^n: pointwise, a.e. and L1, but not uniform">
+
+The thin spike `n·1_[0, 1/n]` collapses onto the single point `x = 0` — a null
+set — so it converges almost everywhere, yet `∫f_n = 1` stays put:
+**a.e. but not in L¹**.
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_convergence_spike.png" width="820" alt="Thin spike: a.e. but not L1">
+
+The typewriter sequence marches an indicator interval across `[0, 1]`, its
+width shrinking as it goes. The integrals `∫f_n → 0`, so it converges in L¹ —
+yet every point is covered infinitely often: it fails **at every single point**.
+
+<img src="https://raw.githubusercontent.com/HunterZ549/realviz/main/examples/output_convergence_typewriter.png" width="820" alt="Typewriter: L1, but fails at every point">
+
+All four panels share one grid, one limit `f` and one value of `ε`, and the
+verdicts are plain NumPy. Pointwise and a.e. use the same honest finite-window
+test — the measure of the set where the last few members still disagree — which
+is exactly what separates the spike from the typewriter.
+
 ## Install
 
 ```bash
@@ -117,6 +148,12 @@ cantor_function()          # F' = 0 a.e., yet F(1) - F(0) = 1
 # Simple-function approximation — the Lebesgue story, finished
 from realviz import simple_approximation
 simple_approximation(lambda x: x**2, 0, 1, n_levels=5)   # s_n -> f, ∫s_n -> ∫f
+
+# Convergence modes — one family, four cameras
+from realviz import convergence_modes, FAMILIES
+convergence_modes("x_pow_n")     # ✓ pointwise & a.e., ✗ uniform
+convergence_modes("thin_spike")  # ✓ a.e., ✗ L1
+convergence_modes("typewriter")  # ✓ L1, fails at every point
 ```
 
 ### Try it yourself
@@ -126,6 +163,7 @@ python examples/demo_compare.py     # x² and sin(x), side by side
 python examples/demo_dirichlet.py   # the Dirichlet illustration
 python examples/demo_cantor.py      # Cantor set + devil's staircase
 python examples/demo_simple_approx.py  # simple functions: s_n -> f
+python examples/demo_convergence.py    # the three counterexamples, 2x2 grids
 ```
 
 ## Design principles
@@ -134,14 +172,14 @@ python examples/demo_simple_approx.py  # simple functions: s_n -> f
   partition counts are bounded, no `eval`/`exec`/`pickle`, no network, no file I/O.
 - **Pedagogical color** — every strip is colored by *what is being partitioned*,
   so the axis-choice is visible at a glance.
-- **Zero magic** — pure NumPy + Matplotlib, ~800 lines of core code, MIT licensed.
+- **Zero magic** — pure NumPy + Matplotlib, ~1,800 lines of core code, MIT licensed.
 
 ## Roadmap
 
 - [x] `v0.1.0` — Riemann vs Lebesgue integral comparison + Dirichlet illustration
 - [x] `v0.2.0` — Cantor set construction + Cantor function (devil's staircase)
 - [x] `v0.3.0` — Simple-function approximation of measurable functions
-- [ ] `v0.4.0` — Convergence modes (pointwise, uniform, a.e., in L¹)
+- [x] `v0.4.0` — Convergence modes (pointwise, uniform, a.e., in L¹)
 - [ ] `v0.5.0` — Vitali set and non-measurable sets (conceptual)
 
 ## Development
@@ -150,7 +188,7 @@ python examples/demo_simple_approx.py  # simple functions: s_n -> f
 git clone https://github.com/HunterZ549/realviz.git
 cd realviz
 pip install -e ".[dev]"
-pytest               # 120 tests, CI runs Python 3.9–3.12
+pytest               # 179 tests, CI runs Python 3.9–3.12
 ```
 
 ## License

@@ -13,14 +13,17 @@ Full documentation: https://github.com/HunterZ549/realviz
 """
 
 from .cantor import cantor_function, cantor_set
+from .convergence import FAMILIES, convergence_modes
 from .integrals import compare_integrals, dirichlet_illustration, lebesgue_plot, riemann_plot
 from .simple_functions import simple_approximation
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __all__ = [
+    "FAMILIES",
     "cantor_function",
     "cantor_set",
     "compare_integrals",
+    "convergence_modes",
     "dirichlet_illustration",
     "lebesgue_plot",
     "riemann_plot",

@@ -16,6 +16,7 @@ _MAX_SAMPLES = 1_000_000
 _MAX_DOMAIN = 1e12  # reasonable domain bound for real analysis
 _MAX_CANTOR_LEVELS = 10  # each level doubles the interval count: 2**n
 _MAX_APPROX_LEVELS = 10  # each level doubles the band count: 2**n
+_MAX_CONV_N = 60  # function-family depth; drawing scales linearly with n_max
 _MAX_FIGSIZE = 50  # inches per side; the render buffer scales as size * dpi
 
 
@@ -95,6 +96,30 @@ def _check_approx_levels(n: Any, name: str = "n_levels") -> None:
             f"{name} too large: {n}. Maximum is {_MAX_APPROX_LEVELS} "
             f"(that is 2**{_MAX_APPROX_LEVELS} = {2 ** _MAX_APPROX_LEVELS} bands)."
         )
+
+
+def _check_n_max(n: Any, name: str = "n_max") -> None:
+    """Validate function-family depth (how many functions to draw).
+
+    Drawing scales linearly with ``n_max`` (one curve per member), so the cap
+    is generous but keeps a family of dozens of curves readable and cheap.
+    """
+    if not isinstance(n, int) or isinstance(n, bool):
+        raise TypeError(f"{name} must be an int, got {type(n).__name__!r}")
+    if n < 1:
+        raise ValueError(f"{name} must be positive, got {n}")
+    if n > _MAX_CONV_N:
+        raise ValueError(f"{name} too large: {n}. Maximum is {_MAX_CONV_N}.")
+
+
+def _check_epsilon(eps: Any, name: str = "epsilon") -> None:
+    """Validate a relative threshold ``0 < epsilon < 1``."""
+    if not isinstance(eps, Number):
+        raise TypeError(f"{name} must be a number, got {type(eps).__name__!r}")
+    if not math.isfinite(eps):
+        raise ValueError(f"{name} must be finite, got {eps}")
+    if eps <= 0 or eps >= 1:
+        raise ValueError(f"{name} must be strictly between 0 and 1, got {eps}")
 
 
 def _check_figsize(figsize: Any, name: str = "figsize") -> None:
